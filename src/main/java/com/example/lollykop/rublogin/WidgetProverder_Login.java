@@ -27,8 +27,7 @@ import java.util.Map;
 
 public class WidgetProverder_Login extends AppWidgetProvider
 {
-    Button btn;
-    final String LOGIN ="asklfdaskfjas";
+    final String LOGIN ="LoginButtonWidget_Key";
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds)
     {
@@ -64,7 +63,6 @@ public class WidgetProverder_Login extends AppWidgetProvider
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(context);
         //this is the url where you want to send the request
-        //TODO: replace with your own url to send request, as I am using my own localhost for this tutorial
         String url = "https://login.rz.ruhr-uni-bochum.de/cgi-bin/laklogin";
 
         // Request a string response from the provided URL.
@@ -74,14 +72,24 @@ public class WidgetProverder_Login extends AppWidgetProvider
                     public void onResponse(String response) {
                         // Display the response string.
                         System.out.println(response);
-                        Toast toast = Toast.makeText(context, "Logged in!", Toast.LENGTH_LONG);
+                        Toast toast;
+                        if(response.contains("Authentisierung gelungen"))
+                            toast = Toast.makeText(context, "Logged in!", Toast.LENGTH_SHORT);
+                        else if(response.contains("loginID oder Passwort falsch"))
+                            toast = Toast.makeText(context, "loginID oder Passwort falsch!", Toast.LENGTH_LONG);
+                        else
+                            toast = Toast.makeText(context, "unknown Error?!", Toast.LENGTH_LONG);
+
                         toast.show();
+
                     }
                 }, new Response.ErrorListener() {
+
             @Override
             public void onErrorResponse(VolleyError error) {
-                System.out.println("That didn't work!");
-            }
+                Toast toast = Toast.makeText(context, "unknown Error?!", Toast.LENGTH_LONG);
+                toast.show();
+           }
         }) {
             //adding parameters to the request
             @Override
